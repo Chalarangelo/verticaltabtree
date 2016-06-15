@@ -1,0 +1,15 @@
+{
+  "title": "Vertical Tab Tree",
+  "name": "verticaltabtree",
+  "version": "0.0.0",
+  "description": "An add-on that displays tabs in a vertical tree with grouping options.",
+  "main": "verticaltabtree.js",
+  "author": "chalarangelo",
+  "engines": {
+    "firefox": ">=38.0a1"
+  },
+  "license": "GNU GPLv3",
+  "keywords": [
+    "jetpack"
+  ]
+}
