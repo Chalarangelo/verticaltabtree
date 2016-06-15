@@ -1,26 +1,22 @@
+var sidebarworker;
+
 var tabtreebar = require("sdk/ui/sidebar").Sidebar({
   	id: 'verticaltabtree-sidebar',
   	title: 'Vertical Tab Tree',
   	url: require("sdk/self").data.url("verticaltabtree_sidebar.html"),
   	onAttach: function (worker) {
-  		worker.port.emit("vtt init");
-    	worker.port.on("ping", function() {
-    	});
+  		sidebarworker = worker;
+  		sidebarworker.port.emit("vtt init");
     },
-    onDetach: function (worker) {
-  		worker.port.emit("vtt dispose");
-    	worker.port.on("ping", function() {
-    	});
+    onDetach: function () {
+    	sidebarworker.port.emit("vtt dispose");
+  	 	sidebarworker = undefined;	
     },
-    onShow: function (worker) {
-  		worker.port.emit("vtt start_update");
-    	worker.port.on("ping", function() {
-    	});
+    onShow: function () {
+  		sidebarworker.port.emit("vtt start_update");
     },
-    onHide: function (worker) {
+    onHide: function () {
   		worker.port.emit("vtt stop_update");
-    	worker.port.on("ping", function() {
-    	});
     }
 });
 
@@ -49,21 +45,25 @@ function toggleSidebar(state){
 
 var tabs = require("sdk/tabs");
 tabs.on('open',function(tab){
-	console.log('opened '+tab.url)
+	console.log('opened '+tab.url);
 });
 
 tabs.on('close',function(tab){
-	console.log('closed '+tab.url)
+	console.log('closed '+tab.url);
 });
 
 tabs.on('ready',function(tab){
-	console.log('loaded '+tab.url)
+	console.log('loaded '+tab.url);
+	if(sidebarworker){
+		sidebarworker.port.emit("vtt alter",tab.title);
+	}
 });
 
 tabs.on('activate',function(tab){
-	console.log('active changed to '+tab.url)
+	console.log('active changed to '+tab.url);
+	
 });
 
 tabs.on('deactivate',function(tab){
-	console.log('active changed from '+tab.url)
+	console.log('active changed from '+tab.url);
 });
