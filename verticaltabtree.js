@@ -46,3 +46,24 @@ function toggleSidebar(state){
 		tabtreebarOpen = false;
 	}
 }
+
+var tabs = require("sdk/tabs");
+tabs.on('open',function(tab){
+	console.log('opened '+tab.url)
+});
+
+tabs.on('close',function(tab){
+	console.log('closed '+tab.url)
+});
+
+tabs.on('ready',function(tab){
+	console.log('loaded '+tab.url)
+});
+
+tabs.on('activate',function(tab){
+	console.log('active changed to '+tab.url)
+});
+
+tabs.on('deactivate',function(tab){
+	console.log('active changed from '+tab.url)
+});
