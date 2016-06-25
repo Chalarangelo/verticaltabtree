@@ -55,7 +55,10 @@ tabs.on('close',function(tab){
 tabs.on('ready',function(tab){
 	console.log('loaded '+tab.url);
 	if(sidebarworker){
-		sidebarworker.port.emit("vtt alter",tab.title);
+		require("sdk/places/favicon").getFavicon(tab).then(function (url) {
+      		sidebarworker.port.emit("vtt alter",{id: tab.id, title: tab.title, favicon: url});
+    	});
+		
 	}
 });
 
