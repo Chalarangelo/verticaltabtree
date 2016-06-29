@@ -1,7 +1,7 @@
 {
   "title": "Vertical Tab Tree",
   "name": "verticaltabtree",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An add-on that displays tabs in a vertical tree with grouping options.",
   "main": "verticaltabtree.js",
   "author": "chalarangelo",

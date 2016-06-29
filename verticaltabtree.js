@@ -6,6 +6,12 @@ var tabs = require("sdk/tabs");	// Tabs list.
 function getFaviconFromDomain(url){
 	return('https://plus.google.com/_/favicon?domain_url='+url);
 }
+// tabData Object constructor function.
+function tabData(id, title, faviconUrl) {
+    this.id = id;
+    this.title = title;
+    this.favicon = getFaviconFromDomain(faviconUrl);
+}
 // Sidebar control for the add-on.
 var tabtreebar = require("sdk/ui/sidebar").Sidebar({
   	id: 'verticaltabtree-sidebar',
@@ -23,9 +29,11 @@ var tabtreebar = require("sdk/ui/sidebar").Sidebar({
     // messages to populate the tabs list.
     onShow: function () {
     	sidebarworker.port.emit("vtt clear");
-    	for (let tab of tabs)
-    		sidebarworker.port.emit("vtt init",{id: tab.id, title: tab.title, favicon: getFaviconFromDomain(tab.url)});
-  		
+    	for (let tab of tabs){
+    		sidebarworker.port.emit("vtt init",new tabData(tab.id,tab.title,tab.url));
+    		if (tab.id == tabs.activeTab.id)	
+    			sidebarworker.port.emit("vtt activate",new tabData(tab.id,tab.title,tab.url));
+    	}
     }
 });
 // Menu button that opens and closes the sidebar.
@@ -54,26 +62,26 @@ function toggleSidebar(state){
 }
 // Fires when a tab is opened.
 tabs.on('open',function(tab){
-	console.log('opened '+tab.url);
+	if(sidebarworker)
+    	sidebarworker.port.emit("vtt open",new tabData(tab.id,tab.title,tab.url));
 });
 // Fires when a tab is closed.
 tabs.on('close',function(tab){
-	console.log('closed '+tab.url);
+	if(sidebarworker)
+    	sidebarworker.port.emit("vtt close",new tabData(tab.id,tab.title,tab.url));
 });
 // Fires when a tab is loaded.
 tabs.on('ready',function(tab){
-	console.log('loaded '+tab.url);
-	if(sidebarworker){
-		console.log('sent');
-    	sidebarworker.port.emit("vtt alter",{id: tab.id, title: tab.title, favicon: getFaviconFromDomain(tab.url)});
-	}
+	if(sidebarworker)
+    	sidebarworker.port.emit("vtt alter",new tabData(tab.id,tab.title,tab.url));
 });
 // Fires when a tab is activated.
 tabs.on('activate',function(tab){
-	console.log('active changed to '+tab.url);
-	
+	if(sidebarworker)
+    	sidebarworker.port.emit("vtt activate",new tabData(tab.id,tab.title,tab.url));
 });
 // Fires when a tab is deactivated.
 tabs.on('deactivate',function(tab){
-	console.log('active changed from '+tab.url);
+	if(sidebarworker)
+    	sidebarworker.port.emit("vtt deactivate",new tabData(tab.id,tab.title,tab.url));
 });

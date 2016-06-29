@@ -1,0 +1,21 @@
+#tabList{
+    top: 20px;
+    left: 0px;
+}
+li{
+    left: -30px;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}
+.fav{
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    background-repeat: none; 
+    background-size: contain;  
+}
+.active{
+    background-color: #fff4cc;
+}
